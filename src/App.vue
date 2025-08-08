@@ -1,5 +1,14 @@
-<script setup lang="ts"></script>
+<template>
+  <v-layout>
+    <AppNavbar />
+    <v-main>
+      <router-view />
+    </v-main>
+    <AppAlert />
+  </v-layout>
+</template>
 
-<template></template>
-
-<style scoped></style>
+<script setup lang="ts">
+import AppNavbar from './components/layout/AppNavbar.vue'
+import AppAlert from './components/layout/AppAlert.vue'
+</script>
