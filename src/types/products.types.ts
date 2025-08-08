@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Product {
   name: string
   id: string
@@ -119,3 +120,4 @@ export interface StatusClass {
 export enum StatusEnum {
   Active = 'ACTIVE',
 }
+ 

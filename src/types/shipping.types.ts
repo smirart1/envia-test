@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface RateFields {
   postalCode: string
   carrier: string
@@ -149,3 +150,4 @@ export interface Detail {
   weight: number
   content: string
 }
+ 

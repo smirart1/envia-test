@@ -34,7 +34,11 @@ export const useProductsStore = defineStore('productsStore', () => {
     const index = cart.value.findIndex((product) => product.id === item.id)
     if (index === -1) return
     const quantity = cart.value[index].quantity ?? 0
-    quantity > 1 ? (cart.value[index].quantity = quantity - 1) : removeProduct(item.id)
+    if (quantity > 1) {
+      cart.value[index].quantity = quantity - 1
+    } else {
+      removeProduct(item.id)
+    }
   }
 
   const getProducts = async () => {
@@ -46,13 +50,15 @@ export const useProductsStore = defineStore('productsStore', () => {
           try {
             const completeProduct = await ProductsApi.getSingleProduct(prod.id)
             return formatProduct(completeProduct)
-          } catch (err) {
+          } catch (error) {
+            console.error(error)
             return formatProduct(prod)
           }
         }),
       )
       setProducts(products)
     } catch (error) {
+      /* eslint-disable @typescript-eslint/no-explicit-any */
       console.error(error)
       store.setAlert(
         (error as any).response.data || 'Ocurrió un error, intenta de nuevo más tarde.',

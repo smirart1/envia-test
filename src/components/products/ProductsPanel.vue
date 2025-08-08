@@ -24,6 +24,6 @@ const productsStore = useProductsStore()
 const { products } = storeToRefs(productsStore)
 
 onMounted(async () => {
-  products.value.length === 0 && (await productsStore.getProducts())
+  if (products.value.length === 0) await productsStore.getProducts()
 })
 </script>
