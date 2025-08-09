@@ -23,6 +23,7 @@
                 variant="outlined"
                 color="primary"
                 placeholder="Agregar cupón"
+                class="custom-field"
               />
             </v-col>
             <v-col cols="auto" class="pl-1">
@@ -85,7 +86,7 @@
           </v-row>
         </v-col>
 
-        <v-col cols="12">
+        <v-col cols="12" v-if="tab !== 2">
           <v-btn
             block
             color="primary"
@@ -133,7 +134,7 @@ const addCoupon = () => {
 
 const comebackToCart = () => {
   emit('cart')
-  shippingStore.setShipping(0)
+  shippingStore.setShipping(0, '', '')
   shippingStore.setRateList([])
 }
 
@@ -157,3 +158,9 @@ const disabledButton = computed(() => {
   return false
 })
 </script>
+
+<style>
+.custom-field .v-field__input {
+  min-height: 36px;
+}
+</style>

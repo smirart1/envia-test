@@ -7,7 +7,7 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "axios": "^1.11.0",
+    "html2pdf.js": "^0.10.3",
     "pinia": "^3.0.3",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@tsconfig/node22": "^22.0.2",
+    "@types/html2pdf.js": "^0.10.0",
     "@types/node": "^22.17.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/eslint-config-prettier": "^10.2.0",
