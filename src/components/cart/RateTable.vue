@@ -25,7 +25,7 @@
           "
           size="24"
           :color="shipping === item.totalPrice ? 'primary' : 'grey'"
-          @click="shippingStore.setShipping(item.totalPrice)"
+          @click="shippingStore.setShipping(item.totalPrice, item.carrier, item.service)"
         />
       </template>
     </v-data-table>

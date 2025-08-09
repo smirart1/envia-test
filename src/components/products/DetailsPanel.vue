@@ -1,5 +1,6 @@
 <template>
-  <v-row no-gutters justify="center" class="mt-4">
+  <PageLoader v-if="store.loading" />
+  <v-row v-else no-gutters justify="center" class="mt-4">
     <v-col cols="12" class="page-container">
       <v-row no-gutters>
         <v-col cols="12" sm="6" md="8" class="px-3 px-md-10">
@@ -50,20 +51,24 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useProductsStore } from '@/stores'
+import { useStore, useProductsStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import PageLoader from '../layout/PageLoader.vue'
 
 const props = defineProps<{
   id: string
 }>()
 
 const productsStore = useProductsStore()
-const { selectedProduct: product } = storeToRefs(productsStore)
+const store = useStore()
+const { selectedProduct: product, products } = storeToRefs(productsStore)
 
 const loading = ref(false)
 
 onMounted(async () => {
-  await productsStore.getProduct(props.id)
+  if (products.value.length === 0) await productsStore.getProducts()
+  const product = products.value.find((prod) => prod.id === props.id)
+  productsStore.setProduct(product)
 })
 
 onUnmounted(() => {

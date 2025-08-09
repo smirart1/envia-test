@@ -8,7 +8,17 @@ export interface RateFields {
   width: number
 }
 
-export interface RatePayload {
+export interface ShippingFields {
+  name: string
+  street: string
+  number: string
+  city: string
+  state: string
+  country: string
+  phone: string
+}
+
+export interface ShipmentPayload {
   origin: Destination
   destination: Destination
   packages: Package[]
@@ -22,12 +32,14 @@ export interface Destination {
   company: string
   email: string
   phone: string
-  category: number
   street: string
   number: string
   city: string
   state: string
   postalCode: string
+  category?: number
+  district?: string
+  reference?: string
 }
 
 export interface Package {
@@ -50,13 +62,16 @@ export interface RateDimensions {
 
 export interface Settings {
   comments: string
-  currency: string
+  currency?: string
+  printFormat?: string
+  printSize?: string
 }
 
 export interface Shipment {
   carrier: string
   type: number
-  import: number
+  import?: number
+  service?: string
 }
 
 export interface RateResponse {
@@ -72,8 +87,8 @@ export interface Rate {
   service: string
   serviceDescription: string
   dropOff: number
-  branchType: null
-  zone: number
+  branchType: number | null
+  zone: number | null
   deliveryEstimate: string
   deliveryDate: DeliveryDate
   quantity: number
@@ -90,17 +105,48 @@ export interface Rate {
   taxes: number
   totalPrice: number
   currency: string
-  smsCost: number
-  whatsappCost: number
   customKey: boolean
-  cashOnDeliveryCommission: number
-  cashOnDeliveryAmount: number
   calculatedDeclaredValue: number
   isMps: boolean
-  shipmentTaxes: any[]
-  branches: any[]
+  smsCost?: number
+  whatsappCost?: number
+  cashOnDeliveryCommission?: number
+  cashOnDeliveryAmount?: number
+  shipmentTaxes?: ShipmentTax[]
+  branches?: Branch[]
   costSummary: CostSummary[]
   packageDetails: PackageDetails
+}
+
+export interface ShipmentTax {
+  [k: string]: unknown
+}
+
+export interface Branch {
+  distance: number
+  branch_id: string
+  branch_code: string
+  branch_type: number
+  reference: string
+  address: BranchAddress
+  hours: unknown[]
+}
+
+export interface BranchAddress {
+  city: string
+  state: string
+  number: string
+  street: string
+  country: string
+  delivery: boolean
+  latitude: string
+  locality: string
+  admission: boolean
+  longitude: string
+  postalCode: string
+  address: string
+  zipcode: string
+  province: string
 }
 
 export interface CostSummary {
@@ -115,20 +161,21 @@ export interface CostSummary {
   additionalChargesTaxes: number
   taxes: number
   totalPrice: number
-  costAdditionalServices: any[]
-  costAdditionalCharges: any[]
+  costAdditionalServices: unknown[]
+  costAdditionalCharges: unknown[]
   currency: string
   customKey: boolean
-  cashOnDeliveryCommission: number
-  cashOnDeliveryAmount: number
-  customKeyCommission: number
-  smsCommission: number
-  securityDeposit: boolean
-  securityWeight: number
-  importFee: number
-  whatsappCommission: number
-  folio: null
   calculatedDeclaredValue: number
+  cashOnDeliveryCommission?: number
+  cashOnDeliveryAmount?: number
+  customKeyCommission?: number
+  smsCommission?: number
+  securityDeposit?: boolean
+  securityWeight?: number
+  importFee?: number
+  whatsappCommission?: number
+  folio?: string | null
+  insertConcepts?: unknown[]
 }
 
 export interface DeliveryDate {
@@ -150,4 +197,20 @@ export interface Detail {
   weight: number
   content: string
 }
- 
+
+export interface GuideResponse {
+  meta: string
+  data: Guide[]
+}
+
+export interface Guide {
+  carrier: string
+  service: string
+  trackingNumber: string
+  trackUrl: string
+  label: string
+  additionalFiles: any[]
+  totalPrice: number
+  currentBalance: number
+  currency: string
+}
