@@ -18,6 +18,10 @@ export const useProductsStore = defineStore('productsStore', () => {
 
   const setDiscount = (value: number) => (discount.value = value)
 
+  const setCart = (items?: Product[]) => (cart.value = items ? items : [])
+
+  const saveCartToStorage = () => sessionStorage.setItem('cart', JSON.stringify(cart.value))
+
   const addProduct = (item: Product) => {
     const index = cart.value.findIndex((product) => product.id === item.id)
     if (index === -1) {
@@ -25,10 +29,13 @@ export const useProductsStore = defineStore('productsStore', () => {
     } else {
       cart.value[index].quantity = (cart.value[index].quantity ?? 0) + 1
     }
+    saveCartToStorage()
   }
 
-  const removeProduct = (id: string) =>
-    (cart.value = cart.value.filter((product) => product.id !== id))
+  const removeProduct = (id: string) => {
+    cart.value = cart.value.filter((product) => product.id !== id)
+    saveCartToStorage()
+  }
 
   const removeQuantity = (item: Product) => {
     const index = cart.value.findIndex((product) => product.id === item.id)
@@ -36,6 +43,7 @@ export const useProductsStore = defineStore('productsStore', () => {
     const quantity = cart.value[index].quantity ?? 0
     if (quantity > 1) {
       cart.value[index].quantity = quantity - 1
+      saveCartToStorage()
     } else {
       removeProduct(item.id)
     }
@@ -48,8 +56,8 @@ export const useProductsStore = defineStore('productsStore', () => {
       const products = await Promise.all(
         list.map(async (prod) => {
           try {
-            const completeProduct = await ProductsApi.getSingleProduct(prod.id)
-            return formatProduct(completeProduct)
+            const response = await getProduct(prod.id)
+            return formatProduct(response!)
           } catch (error) {
             console.error(error)
             return formatProduct(prod)
@@ -73,8 +81,7 @@ export const useProductsStore = defineStore('productsStore', () => {
     try {
       store.setLoading(true)
       const response = await ProductsApi.getSingleProduct(id)
-      const product = formatProduct(response)
-      setProduct(product)
+      return response
     } catch (error) {
       console.error(error)
     } finally {
@@ -142,5 +149,6 @@ export const useProductsStore = defineStore('productsStore', () => {
     getProducts,
     getProduct,
     setProduct,
+    setCart,
   }
 })
