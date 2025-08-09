@@ -1,5 +1,6 @@
 <template>
-  <v-row no-gutters justify="center">
+  <PageLoader v-if="store.loading" />
+  <v-row v-else no-gutters justify="center">
     <v-col cols="auto" class="page-container">
       <v-tabs v-model="tab" fixed-tabs color="primary" density="comfortable">
         <v-tab v-for="item in items" :disabled="item.disabled" :key="item.name">
@@ -19,15 +20,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, ref } from 'vue'
-import { useProductsStore, useShippingStore } from '@/stores'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useStore, useProductsStore, useShippingStore } from '@/stores'
+import { storeToRefs } from 'pinia'
 import ShoppingCart from './ShoppingCart.vue'
 import ShippingGuide from './ShippingGuide.vue'
 import ShippingRate from './ShippingRate.vue'
+import PageLoader from '../layout/PageLoader.vue'
 
+const store = useStore()
 const productsStore = useProductsStore()
 const shippingStore = useShippingStore()
 
+const { products } = storeToRefs(productsStore)
 const tab = ref(0)
 
 const items = computed(() => [
@@ -46,9 +51,13 @@ const items = computed(() => [
   },
 ])
 
+onMounted(async () => {
+  if (products.value.length === 0) await productsStore.getProducts()
+})
+
 onUnmounted(() => {
   productsStore.setDiscount(0)
-  shippingStore.setShipping(0)
+  shippingStore.setShipping(0, '', '')
   shippingStore.setRateList([])
 })
 </script>

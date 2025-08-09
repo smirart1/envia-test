@@ -1,5 +1,6 @@
 <template>
-  <v-row no-gutters class="pa-2 pt-4">
+  <PageLoader v-if="store.loading" />
+  <v-row v-else no-gutters class="pa-2 pt-4">
     <v-col
       v-for="product in productsStore.products"
       cols="12"
@@ -15,12 +16,15 @@
 </template>
 
 <script setup lang="ts">
-import { useProductsStore } from '@/stores'
+import { useStore, useProductsStore } from '@/stores'
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import ProductCard from './ProductCard.vue'
+import PageLoader from '../layout/PageLoader.vue'
 
 const productsStore = useProductsStore()
+const store = useStore()
+
 const { products } = storeToRefs(productsStore)
 
 onMounted(async () => {
